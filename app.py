@@ -45,7 +45,7 @@ def home():
         <div class="container">
             <h1>Xin chào, mình là Quy</h1>
             <p>Đây la du an devops.</p>
-            <p>Website này được chạy bằng Python Flask và deploy bằng Docker trên AWS EC2.</p>
+            <p>Website nay duoc tu dong deploy bang GitHub Actions.</p>
         </div>
     </body>
     </html>
