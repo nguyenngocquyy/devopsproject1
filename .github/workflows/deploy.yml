@@ -1,13 +1,31 @@
-script: |
-  mkdir -p /home/ec2-user/project-1-devops
-  cd /home/ec2-user/project-1-devops
+name: Deploy to EC2
 
-  if [ ! -d .git ]; then
-    git clone https://github.com/nguyenngocquyy/devopsproject1.git .
-  else
-    git pull origin main
-  fi
+on:
+  push:
+    branches:
+      - main
 
-  sudo docker build -t python-devops-web .
-  sudo docker rm -f python-devops-web || true
-  sudo docker run -d --name python-devops-web --restart unless-stopped -p 8080:5000 python-devops-web
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH and deploy on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            mkdir -p /home/ec2-user/project-1-devops
+            cd /home/ec2-user/project-1-devops
+
+            if [ ! -d .git ]; then
+              git clone https://github.com/nguyenngocquyy/devopsproject1.git .
+            else
+              git pull origin main
+            fi
+
+            sudo docker build -t python-devops-web .
+            sudo docker rm -f python-devops-web || true
+            sudo docker run -d --name python-devops-web --restart unless-stopped -p 8080:5000 python-devops-web
